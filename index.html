@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>businessx.dev</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
+
+body{
+  background: linear-gradient(-45deg,#050816,#0f1b3d,#1a0b2e,#020617);
+  background-size:400% 400%;
+  animation:gradient 12s ease infinite;
+  color:white;
+  overflow-x:hidden;
+}
+
+@keyframes gradient{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+/* INTRO */
+#intro{
+  position:fixed;
+  width:100%;
+  height:100vh;
+  background:#050816;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:999;
+  transition:1s;
+}
+
+#intro.hide{
+  opacity:0;
+  transform:scale(1.2);
+}
+
+#intro h1{
+  color:#38bdf8;
+  font-size:45px;
+}
+
+/* CURSOR GLOW */
+#cursor{
+  position:fixed;
+  width:200px;
+  height:200px;
+  border-radius:50%;
+  pointer-events:none;
+  background: radial-gradient(circle, rgba(168,85,247,0.25), transparent 70%);
+  transform:translate(-50%,-50%);
+}
+
+/* GLASS */
+.glass{
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  border:1px solid rgba(168,85,247,0.2);
+  border-radius:18px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.6);
+}
+
+/* HEADER */
+header{
+  text-align:center;
+  padding:20px;
+}
+
+header h1{
+  color:#38bdf8;
+}
+
+/* HERO */
+.hero{
+  text-align:center;
+  padding:50px;
+}
+
+.hero h2{
+  font-size:38px;
+  color:#38bdf8;
+}
+
+/* CARDS */
+.container{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:20px;
+  padding:20px;
+}
+
+.card{
+  width:280px;
+  padding:15px;
+  text-align:center;
+  cursor:pointer;
+  transition:0.4s;
+}
+
+.card:hover{
+  transform:rotateY(10deg) rotateX(5deg) scale(1.05);
+}
+
+.card img{
+  width:100%;
+  height:160px;
+  border-radius:12px;
+  object-fit:cover;
+}
+
+.price{
+  color:#38bdf8;
+  font-size:20px;
+  margin-top:5px;
+}
+
+/* BUTTON */
+.btn{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background: linear-gradient(90deg,#38bdf8,#a855f7);
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+/* POPUP */
+#overlay{
+  display:none;
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+}
+
+#bot{
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:350px;
+  padding:20px;
+}
+
+/* CHAT */
+#chat{
+  height:150px;
+  overflow:auto;
+  margin-bottom:10px;
+}
+
+/* SECTIONS */
+.section{
+  text-align:center;
+  padding:20px;
+  margin:15px;
+  opacity:0;
+  transform:translateY(40px);
+  transition:1s;
+}
+
+.section.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+footer{
+  text-align:center;
+  padding:20px;
+  color:#aaa;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="cursor"></div>
+
+<!-- INTRO -->
+<div id="intro">
+  <h1>businessx.dev</h1>
+  <p>Loading...</p>
+</div>
+
+<header class="glass">
+  <h1>businessx.dev</h1>
+</header>
+
+<div class="hero">
+  <h2>Web • Design • Editing • Bots</h2>
+</div>
+
+<section class="container">
+
+<div class="card glass" onclick="openBot('Web Design','$50')">
+<img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d">
+<h3>Web Design</h3>
+<p class="price">$50</p>
+</div>
+
+<div class="card glass" onclick="openBot('Development','$80')">
+<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085">
+<h3>Development</h3>
+<p class="price">$80</p>
+</div>
+
+<div class="card glass" onclick="openBot('Video Editing','$30')">
+<img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3">
+<h3>Video Editing</h3>
+<p class="price">$30</p>
+</div>
+
+<div class="card glass" onclick="openBot('Chat Bot','$50')">
+<img src="https://images.unsplash.com/photo-1677442136019-21780ecad995">
+<h3>Chat Bot</h3>
+<p class="price">$50</p>
+</div>
+
+</section>
+
+<!-- POPUP -->
+<div id="overlay" onclick="closeBot()"></div>
+
+<div id="bot" class="glass">
+<h2 id="title"></h2>
+
+<div id="chat"></div>
+
+<input type="text" id="msg" placeholder="Type message...">
+<button class="btn" onclick="sendMsg()">Send</button>
+
+</div>
+
+<section class="section glass">
+<h2>About</h2>
+<p>I build modern digital experiences.</p>
+</section>
+
+<section class="section glass">
+<h2>Contact</h2>
+<p>Email: xbesnes@gmail.com</p>
+</section>
+
+<footer>
+© 2026 businessx.dev
+</footer>
+
+<script>
+
+/* INTRO */
+window.onload=function(){
+  setTimeout(()=>{
+    document.getElementById("intro").classList.add("hide");
+    setTimeout(()=>{
+      document.getElementById("intro").style.display="none";
+    },1000);
+  },2000);
+};
+
+/* CURSOR */
+document.addEventListener("mousemove",e=>{
+  let c=document.getElementById("cursor");
+  c.style.left=e.clientX+"px";
+  c.style.top=e.clientY+"px";
+});
+
+/* BOT */
+let service="";
+let price="";
+
+function openBot(s,p){
+  service=s;
+  price=p;
+  document.getElementById("title").innerText=s+" "+p;
+  document.getElementById("bot").style.display="block";
+  document.getElementById("overlay").style.display="block";
+}
+
+function closeBot(){
+  document.getElementById("bot").style.display="none";
+  document.getElementById("overlay").style.display="none";
+}
+
+/* CHAT */
+function sendMsg(){
+  let msg=document.getElementById("msg").value;
+  if(msg==="") return;
+
+  let chat=document.getElementById("chat");
+
+  chat.innerHTML += "<p><b>You:</b> "+msg+"</p>";
+  chat.innerHTML += "<p><b>Bot:</b> We'll contact you soon 🚀</p>";
+
+  document.getElementById("msg").value="";
+  chat.scrollTop=chat.scrollHeight;
+}
+
+/* SCROLL ANIMATION */
+let observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add("show");
+    }
+  });
+});
+
+document.querySelectorAll(".section").forEach(el=>{
+  observer.observe(el);
+});
+
+</script>
+
+</body>
+</html>
